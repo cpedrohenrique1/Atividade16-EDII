@@ -63,7 +63,7 @@ void Tabela::atualizar()
     limpar();
     for (int i = 0; i < grafo->getNVertices(); ++i){
         for (int j = 0; j < grafo->getTamanhoLista(i); ++j){
-            NoGrafo<int> no = grafo->getNOGrafo(i, j);
+            NOGrafo<int> no = grafo->getNOGrafo(i, j);
             tabela->setItem(i, j, new QTableWidgetItem(QString::number(no.getVertice()) + " | " + QString::number(no.getPeso())));
         }
     }
