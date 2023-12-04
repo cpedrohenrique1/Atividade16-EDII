@@ -14,6 +14,7 @@ SOURCES += \
     tabela.cpp
 
 HEADERS += \
+    grafo.h \
     lista.h \
     mainwindow.h \
     no.h \
