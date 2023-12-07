@@ -11,7 +11,7 @@ protected:
         this->lista[vertice1 - 1]->inserirInicio(NOGrafo<TYPE>(vertice2, peso));
         this->lista[vertice2 - 1]->inserirInicio(NOGrafo<TYPE>(vertice1, peso));
     }
-    void set(const int &vertice1, const int &vertice2, const TYPE &peso) override
+    void alterar(const int &vertice1, const int &vertice2, const TYPE &peso) override
     {
         for (int i = 0; i < this->lista[vertice1 - 1]->getQuantidadeElementos(); ++i)
         {

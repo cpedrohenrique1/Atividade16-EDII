@@ -80,7 +80,7 @@ void Tabela::alterarAresta(const int &vertice1, const int& vertice2, const int &
     if (!grafo){
         throw QString("Grafo nao criado");
     }
-    grafo->setAresta(vertice1, vertice2, peso);
+    grafo->alterarAresta(vertice1, vertice2, peso);
     atualizar();
 }
 void Tabela::removerAresta(const int &vertice1, const int& vertice2){

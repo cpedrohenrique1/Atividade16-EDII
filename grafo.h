@@ -12,7 +12,7 @@ protected:
     Lista<NOGrafo<TYPE>> **lista;
     int n_vertices;
     virtual void inserir(const int& vertice1, const int& vertice2, const TYPE& peso) = 0;
-    virtual void set(const int& vertice1, const int& vertice2, const TYPE& peso) = 0;
+    virtual void alterar(const int& vertice1, const int& vertice2, const TYPE& peso) = 0;
     virtual void remover(const int& vertice1, const int& vertice2) = 0;
     
 public:
@@ -65,7 +65,7 @@ public:
         inserir(vertice1, vertice2, peso);
     }
 
-    void setAresta(const int &vertice1, const int &vertice2, const TYPE &peso)
+    void alterarAresta(const int &vertice1, const int &vertice2, const TYPE &peso)
     {
         if ((vertice1 <= 0 || vertice1 > n_vertices) || (vertice2 <= 0 || vertice2 > n_vertices))
         {
@@ -79,7 +79,7 @@ public:
         {
             throw QString("Lista nao criada");
         }
-        set(vertice1, vertice2, peso);
+        alterar(vertice1, vertice2, peso);
     }
     int getNVertices() const
     {
