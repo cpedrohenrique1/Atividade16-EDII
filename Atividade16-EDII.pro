@@ -14,6 +14,7 @@ SOURCES += \
     tabela.cpp
 
 HEADERS += \
+    caminho.h \
     etiqueta.h \
     grafo.h \
     grafodirecionado.h \
