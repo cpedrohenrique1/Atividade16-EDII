@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/puc/Documentos/repos/Atividade16-EDII",
-      "program": "/home/puc/Documentos/repos/Atividade16-EDII/build/Debug/outDebug",
+      "cwd": "/home/cpedrohenrique1/Documents/development/qtcreator/Atividade16-EDII",
+      "program": "/home/cpedrohenrique1/Documents/development/qtcreator/Atividade16-EDII/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

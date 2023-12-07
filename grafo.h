@@ -8,16 +8,17 @@
 template <class TYPE>
 class Grafo
 {
-private:
+protected:
     Lista<NOGrafo<TYPE>> **lista;
     int n_vertices;
-
+    virtual void inserir(const int& vertice1, const int& vertice2, const TYPE& peso) = 0;
+    virtual void set(const int& vertice1, const int& vertice2, const TYPE& peso) = 0;
+    virtual void remover(const int& vertice1, const int& vertice2) = 0;
+    
 public:
     Grafo() : lista(0),
               n_vertices(0)
-
-    {
-    }
+    {}
     Grafo(const int &n_vertices) : lista(0),
                                    n_vertices(0)
     {
@@ -39,6 +40,7 @@ public:
             throw QString("Nao foi possivel alocar memoria");
         }
     }
+    
     void inserirAresta(const int &vertice1, const int &vertice2, const TYPE &peso)
     {
         if ((vertice1 <= 0 || vertice1 > n_vertices) || (vertice2 <= 0 || vertice2 > n_vertices))
@@ -60,9 +62,9 @@ public:
                 throw QString("Aresta ja existe");
             }
         }
-        lista[vertice1 - 1]->inserirInicio(NOGrafo<TYPE>(vertice2, peso));
-        lista[vertice2 - 1]->inserirInicio(NOGrafo<TYPE>(vertice1, peso));
+        inserir(vertice1, vertice2, peso);
     }
+
     void setAresta(const int &vertice1, const int &vertice2, const TYPE &peso)
     {
         if ((vertice1 <= 0 || vertice1 > n_vertices) || (vertice2 <= 0 || vertice2 > n_vertices))
@@ -77,29 +79,13 @@ public:
         {
             throw QString("Lista nao criada");
         }
-        for (int i = 0; i < lista[vertice1 - 1]->getQuantidadeElementos(); ++i)
-        {
-            if (lista[vertice1 - 1]->acessarPosicao(i).getVertice() == vertice2)
-            {
-                lista[vertice1 - 1]->retirarPosicao(i);
-                lista[vertice1 - 1]->inserirPosicao(i, NOGrafo<TYPE>(vertice2, peso));
-                break;
-            }
-        }
-        for (int i = 0; i < lista[vertice2 - 1]->getQuantidadeElementos(); ++i)
-        {
-            if (lista[vertice2 - 1]->acessarPosicao(i).getVertice() == vertice1)
-            {
-                lista[vertice2 - 1]->retirarPosicao(i);
-                lista[vertice2 - 1]->inserirPosicao(i, NOGrafo<TYPE>(vertice1, peso));
-                break;
-            }
-        }
+        set(vertice1, vertice2, peso);
     }
     int getNVertices() const
     {
         return n_vertices;
     }
+
     void removerAresta(const int &vertice1, const int &vertice2)
     {
         if ((vertice1 <= 0 || vertice1 > n_vertices) || (vertice2 <= 0 || vertice2 > n_vertices))
@@ -114,22 +100,7 @@ public:
         {
             throw QString("Lista nao criada");
         }
-        for (int i = 0; i < lista[vertice1 - 1]->getQuantidadeElementos(); ++i)
-        {
-            if (lista[vertice1 - 1]->acessarPosicao(i).getVertice() == vertice2)
-            {
-                lista[vertice1 - 1]->retirarPosicao(i);
-                break;
-            }
-        }
-        for (int i = 0; i < lista[vertice2 - 1]->getQuantidadeElementos(); ++i)
-        {
-            if (lista[vertice2 - 1]->acessarPosicao(i).getVertice() == vertice1)
-            {
-                lista[vertice2 - 1]->retirarPosicao(i);
-                break;
-            }
-        }
+        remover(vertice1, vertice2);
     }
     NOGrafo<TYPE> getNOGrafo(const int &indice, const int &j) const
     {
@@ -139,13 +110,13 @@ public:
         }
         return lista[indice]->acessarPosicao(j);
     }
-    int getTamanhoLista(const int &vertice) const
+    int getTamanhoLista(const int &indice) const
     {
-        if (vertice < 0 || vertice >= n_vertices)
+        if (indice < 0 || indice >= n_vertices)
         {
             throw QString("indice invalido");
         }
-        return lista[vertice]->getQuantidadeElementos();
+        return lista[indice]->getQuantidadeElementos();
     }
     ~Grafo()
     {
