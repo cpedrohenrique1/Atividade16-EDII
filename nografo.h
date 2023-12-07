@@ -12,11 +12,11 @@ private:
 
 public:
     NOGrafo() : vertice(0),
-                peso()
+                peso(TYPE())
     {
     }
-    NOGrafo(const int &vertice, const int &peso) : vertice(0),
-                                                   peso()
+    NOGrafo(const int &vertice, const TYPE &peso = TYPE()) : vertice(0),
+                                                             peso(peso)
     {
         if (vertice <= 0)
         {

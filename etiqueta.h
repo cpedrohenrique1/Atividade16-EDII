@@ -13,12 +13,6 @@ private:
     bool situacao_vertice;
 
 public:
-    Etiqueta(const TYPE &valorInicial = TYPE()) : custo_acumulado(valorInicial),
-                                                  vertice_precedente(0),
-                                                  quantidade_arestas_visitadas(0),
-                                                  situacao_vertice(false)
-    {
-    }
     Etiqueta(const TYPE &valorInicial = TYPE(),
              const int &vertice_precedente = int(),
              const int &quantidade_arestas_visitadas = int(),
