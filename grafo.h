@@ -111,7 +111,7 @@ public:
         }
         return lista[indice]->acessarPosicao(posicao);
     }
-    int getTamanhoLista(const int &indice) const
+    int getTamanhoListaGrafo(const int &indice) const
     {
         if (indice < 0 || indice >= n_vertices)
         {

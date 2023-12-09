@@ -34,31 +34,34 @@ public:
             throw QString("Erro ao alocar memoria");
         }
     }
-    
-    Etiqueta<TYPE> getEtiqueta(const int& indice, const int& posicao)const{
-        if (indice < 0 || indice >= n_vertices){
-            throw QString("Indice invalido");
-        }
-        return etiqueta[indice]->acessarPosicao(posicao);
-    }
 
-    Etiqueta<TYPE> getEtiquetaValida(const int &vertice)
-    {
-        if (!grafo)
-        {
+    void verificacaoPadrao(const int& indice_vertice) const{
+        if (!grafo || n_vertices == 0){
             throw QString("Grafo nao inicializado");
         }
-        if (!etiqueta)
-        {
-            throw QString("Lista de etiqueta nao inicializada");
+        if (!etiqueta){
+            throw QString("Etiqueta nao iniciada");
         }
-        if (vertice <= 0 || vertice > n_vertices)
-        {
+        if (indice_vertice < 0 || indice_vertice >= n_vertices){
             throw QString("Vertice invalido");
         }
-        for (int i = 0; i < etiqueta[vertice - 1]->getTamanhoLista(); ++i)
+    }
+    
+    Etiqueta<TYPE> getEtiqueta(const int& indice_vertice, const int& posicao) const{
+        verificacaoPadrao(indice_vertice);
+        return etiqueta[indice_vertice]->acessarPosicao(posicao);
+    }
+
+    int getTamanhoListaEtiqueta(const int& indice) const{
+        verificacaoPadrao(indice);
+        return etiqueta[indice]->getTamanhoLista();
+    }
+
+    Etiqueta<TYPE> getEtiquetaValida(const int& vertice)
+    {
+        for (int i = 0; i < getTamanhoListaEtiqueta(vertice - 1); ++i)
         {
-            Etiqueta<TYPE> temp = etiqueta[vertice - 1]->acessarPosicao(i);
+            Etiqueta<TYPE> temp = getEtiqueta(vertice - 1, i);
             if (temp.getSituacaoVertice())
             {
                 return temp;
@@ -68,21 +71,9 @@ public:
     }
 
     Etiqueta<TYPE> getEtiquetaMenorCusto(const int& vertice){
-        if (!grafo)
-        {
-            throw QString("Grafo nao inicializado");
-        }
-        if (!etiqueta)
-        {
-            throw QString("Lista de etiqueta nao inicializada");
-        }
-        if (vertice <= 0 || vertice > n_vertices)
-        {
-            throw QString("Vertice invalido");
-        }
-        Etiqueta<TYPE> resultado = etiqueta[vertice - 1]->acessarPosicao(0);
-        for (int i = 1; i < etiqueta[vertice - 1]->getTamanhoLista(); ++i){
-            Etiqueta<TYPE> etiqueta_temp = etiqueta[vertice - 1]->acessarPosicao(i);
+        Etiqueta<TYPE> resultado = getEtiqueta(vertice - 1, 0);
+        for (int i = 1; i < getTamanhoListaEtiqueta(vertice - 1); ++i){
+            Etiqueta<TYPE> etiqueta_temp = getEtiqueta(vertice - 1, i);
             if (resultado.getCustoAcumulado() > etiqueta_temp.getCustoAcumulado()){
                 resultado = etiqueta_temp;
             }
@@ -90,49 +81,31 @@ public:
         return resultado;
     }
 
-    Etiqueta<TYPE> getEtiquetaMenorCusto(const int& vertice, int& posicao){
-        if (!grafo)
-        {
-            throw QString("Grafo nao inicializado");
-        }
-        if (!etiqueta)
-        {
-            throw QString("Lista de etiqueta nao inicializada");
-        }
-        if (vertice <= 0 || vertice > n_vertices)
-        {
-            throw QString("Vertice invalido");
-        }
-        Etiqueta<TYPE> resultado = etiqueta[vertice - 1]->acessarPosicao(0);
-        for (int i = 1; i < etiqueta[vertice - 1]->getTamanhoLista(); ++i){
-            Etiqueta<TYPE> etiqueta_temp = etiqueta[vertice - 1]->acessarPosicao(i);
-            if (resultado.getCustoAcumulado() > etiqueta_temp.getCustoAcumulado()){
-                resultado = etiqueta_temp;
+    int getPosicaoMenorCusto(const int& vertice){
+        int posicao = 0;
+        int menor_custo = getEtiqueta(vertice - 1, 0).getCustoAcumulado();
+        for (int i = 1; i < getTamanhoListaEtiqueta(vertice - 1); ++i){
+            int aux = getEtiqueta(vertice - 1, i).getCustoAcumulado();
+            if (menor_custo > aux){
+                menor_custo = aux;
                 posicao = i;
             }
         }
-        return resultado;
+        return posicao;
     }
 
-    void encontrarCaminho(int vertice)
-    {
-        if (!grafo)
-        {
-            throw QString("Grafo nao inicializado");
-        }
-        if (!etiqueta)
-        {
-            throw QString("Lista de etiqueta nao inicializada");
-        }
-        if (vertice <= 0 || vertice > n_vertices)
-        {
-            throw QString("Vertice invalido");
-        }
-        etiqueta[vertice - 1]->inserirInicio(Etiqueta<TYPE>(TYPE(), 0, 0, true));
+    void inserirEtiqueta(const int& vertice, const Etiqueta<TYPE>& item){
+        verificacaoPadrao(vertice);
+        etiqueta[vertice]->inserirInicio(item);
+    }
+
+    void encontrarCaminho(const int& vertice){
+        Etiqueta<TYPE> primeira_etiqueta(TYPE(), 0, 0, true);
+        inserirEtiqueta(vertice - 1, Etiqueta<TYPE>(primeira_etiqueta));
         for (int i = 1; i < n_vertices; ++i)
         {
-            int tamanho_lista = grafo->getTamanhoLista(vertice - 1);
-            if (tamanho_lista == 1)
+            int tamanho_lista_grafo = grafo->getTamanhoListaGrafo(vertice - 1);
+            if (tamanho_lista_grafo == 1)
             {
                 NOGrafo<TYPE> grafo_temp = grafo->getNOGrafo(vertice - 1, 0);
                 Etiqueta<TYPE> item(grafo_temp.getPeso() + getEtiquetaValida(vertice).getCustoAcumulado(),
@@ -140,18 +113,18 @@ public:
                                     getEtiquetaValida().getQuantidadeArestasVisitadas() + 1,
                                     true);
                 vertice = grafo_temp.getVertice();
-                etiqueta[vertice - 1]->inserirInicio(item);
+                inserirEtiqueta(vertice - 1, item);
             }else{
-                for (int j = 0; j < tamanho_lista; ++j){
+                for (int j = 0; j < tamanho_lista_grafo; ++j){
                     NOGrafo<TYPE> grafo_temp = grafo->getNOGrafo(vertice - 1, j);
                     Etiqueta<TYPE> item(grafo_temp.getPeso() + getEtiquetaValida(vertice).getCustoAcumulado(),
                                         vertice,
                                         getEtiquetaValida(vertice).getQuantidadeArestasVisitadas() + 1,
                                         false);
-                    etiqueta[grafo_temp.getVertice() - 1]->inserirInicio(item);
+                    inserirEtiqueta(grafo_temp.getVertice() - 1, item);
                 }
                 int vertice_menor;
-                for (int j = 0; j < tamanho_lista - 1; ++j){
+                for (int j = 0; j < tamanho_lista_grafo - 1; ++j){
                     NOGrafo<TYPE> grafo_temp = grafo->getNOGrafo(vertice - 1, j);
                     Etiqueta<TYPE> etiqueta_menor = getEtiquetaMenorCusto(grafo_temp.getVertice());
                     if (etiqueta_menor.getCustoAcumulado() > getEtiquetaMenorCusto(grafo->getNOGrafo(vertice - 1, j + 1))){
