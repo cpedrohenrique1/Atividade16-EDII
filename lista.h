@@ -28,7 +28,7 @@ public:
         }
     }
 
-    void deletarLista(){
+    void resetarLista(){
         while(!estaVazia()){
             retirarInicio();
         }
