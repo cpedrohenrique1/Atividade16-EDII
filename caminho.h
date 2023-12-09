@@ -99,6 +99,16 @@ public:
         etiqueta[vertice]->inserirInicio(item);
     }
 
+    void inserirEtiquetaPosicao(const int& vertice, const int& posicao, const Etiqueta<TYPE>& item){
+        verificacaoPadrao(vertice);
+        etiqueta[vertice]->inserirPosicao(posicao, item);
+    }
+
+    Etiqueta<TYPE> retirarEtiquetaPosicao(const int& vertice, const int& posicao){
+        verificacaoPadrao(vertice);
+        return etiqueta[vertice]->retirarPosicao(posicao);
+    }
+
     void encontrarCaminho(const int& vertice){
         Etiqueta<TYPE> primeira_etiqueta(TYPE(), 0, 0, true);
         inserirEtiqueta(vertice - 1, Etiqueta<TYPE>(primeira_etiqueta));
@@ -127,16 +137,15 @@ public:
                 for (int j = 0; j < tamanho_lista_grafo - 1; ++j){
                     NOGrafo<TYPE> grafo_temp = grafo->getNOGrafo(vertice - 1, j);
                     Etiqueta<TYPE> etiqueta_menor = getEtiquetaMenorCusto(grafo_temp.getVertice());
-                    if (etiqueta_menor.getCustoAcumulado() > getEtiquetaMenorCusto(grafo->getNOGrafo(vertice - 1, j + 1))){
+                    if (etiqueta_menor.getCustoAcumulado() > getEtiquetaMenorCusto(grafo->getNOGrafo(vertice - 1, j + 1).getVertice())){
                         vertice_menor = grafo->getNOGrafo(vertice - 1, j).getVertice();
                     }
                 }
-                int posicao_vertice = 0;
-                Etiqueta<TYPE> temp = getEtiquetaMenorCusto(vertice_menor - 1, posicao_vertice);
+                int posicao_vertice = getPosicaoMenorCusto(vertice_menor - 1);
+                Etiqueta<TYPE> temp = getEtiqueta(vertice_menor - 1, posicao_vertice);
                 temp.setSituacaoVertice(true);
-                etiqueta[vertice_menor - 1]->retirarPosicao(posicao_vertice);
-                etiqueta[vertice_menor - 1]->inserirPosicao(posicao_vertice);
-                vertice = vertice_menor;
+                retirarEtiquetaPosicao(vertice_menor - 1, posicao_vertice);
+                inserirEtiquetaPosicao(vertice_menor - 1, posicao_vertice, temp);
             }
         }
     }

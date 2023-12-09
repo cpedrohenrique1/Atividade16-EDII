@@ -64,7 +64,7 @@ public:
         {
             throw QString("Quantidade de arestas invalida");
         }
-        this->getQuantidadeArestasVisitadas = quantidade_arestas_visitadas;
+        this->quantidade_arestas_visitadas = quantidade_arestas_visitadas;
     }
     int getQuantidadeArestasVisitadas() const
     {
@@ -72,7 +72,7 @@ public:
     }
     void setSituacaoVertice(bool situacao_vertice)
     {
-        this->getSituacaoVertice = situacao_vertice;
+        this->situacao_vertice = situacao_vertice;
     }
     bool getSituacaoVertice() const
     {
