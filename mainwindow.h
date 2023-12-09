@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include "grafodirecionado.h"
+#include "grafonaoorientado.h"
 #include "caminho.h"
 
 QT_BEGIN_NAMESPACE

@@ -15,9 +15,20 @@ MainWindow::MainWindow(QWidget *parent)
         grafo->inserirAresta(2, 4, 330);
         grafo->inserirAresta(4, 3, 180);
         grafo->inserirAresta(3, 2, 110);
+
+        // GrafoNaoOrientado<int> *grafo = new GrafoNaoOrientado<int>(6);
+        // grafo->inserirAresta(1, 4, 5);
+        // grafo->inserirAresta(1, 3, 15);
+        // grafo->inserirAresta(1, 2, 10);
+        // grafo->inserirAresta(2, 4, 20);
+        // grafo->inserirAresta(2, 3, 10);
+        // grafo->inserirAresta(2, 6, 10);
+        // grafo->inserirAresta(3, 5, 5);
+        // grafo->inserirAresta(4, 5, 5);
+        // grafo->inserirAresta(4, 6, 25);
         Caminho<int> caminho(grafo);
         caminho.encontrarCaminho(1);
-        for (int i = 0; i < 5; ++i){
+        for (int i = 0; i < 6; ++i){
             Etiqueta<int> temp = caminho.getEtiquetaValida(i);
             std::cout << "Vertice " << i + 1 << '\n';
             std::cout << "Custo acumulado: " << temp.getCustoAcumulado() << '\n';
