@@ -28,9 +28,15 @@ public:
         }
     }
 
+    void deletarLista(){
+        while(!estaVazia()){
+            retirarInicio();
+        }
+    }
+
     bool estaVazia() const
     {
-        return !(bool(quantidadeElementos));
+        return (quantidadeElementos == 0);
     }
 
     void inserirInicio(const L &entrada)

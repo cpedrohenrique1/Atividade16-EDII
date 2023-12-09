@@ -41,7 +41,7 @@ public:
         }
     }
     
-    void inserirAresta(const int &vertice1, const int &vertice2, const TYPE &peso)
+    void inserirAresta(const int& vertice1, const int& vertice2, const TYPE& peso)
     {
         if ((vertice1 <= 0 || vertice1 > n_vertices) || (vertice2 <= 0 || vertice2 > n_vertices))
         {
@@ -55,9 +55,10 @@ public:
         {
             throw QString("Lista nao criada");
         }
-        for (int i = 0; i < lista[vertice1 - 1]->getQuantidadeElementos(); ++i)
+        int vertice1_temp = vertice1 - 1;
+        for (int i = 0; i < lista[vertice1_temp]->getQuantidadeElementos(); ++i)
         {
-            if (lista[vertice1 - 1]->acessarPosicao(i).getVertice() == vertice2)
+            if (lista[vertice1_temp]->acessarPosicao(i).getVertice() == vertice2)
             {
                 throw QString("Aresta ja existe");
             }
