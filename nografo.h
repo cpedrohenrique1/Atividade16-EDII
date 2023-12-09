@@ -41,7 +41,7 @@ public:
     {
         if (vertice <= 0)
         {
-            throw QString("Vertice negativo");
+            throw QString("Vertice invalido");
         }
         this->vertice = vertice;
     }

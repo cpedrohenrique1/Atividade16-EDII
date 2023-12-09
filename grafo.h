@@ -102,13 +102,13 @@ public:
         }
         remover(vertice1, vertice2);
     }
-    NOGrafo<TYPE> getNOGrafo(const int &indice, const int &j) const
+    NOGrafo<TYPE> getNOGrafo(const int &indice, const int &posicao) const
     {
         if (indice < 0 || indice >= n_vertices)
         {
             throw QString("indice invalido");
         }
-        return lista[indice]->acessarPosicao(j);
+        return lista[indice]->acessarPosicao(posicao);
     }
     int getTamanhoLista(const int &indice) const
     {
