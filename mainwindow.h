@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMessageBox>
+#include "grafodirecionado.h"
+#include "caminho.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

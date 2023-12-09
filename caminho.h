@@ -7,7 +7,7 @@ template <class TYPE>
 class Caminho
 {
 private:
-    Grafo<TYPE> *grafo;
+    const Grafo<TYPE> *grafo;
     Lista<Etiqueta<TYPE>> **etiqueta;
     int n_vertices;
 
@@ -54,7 +54,7 @@ public:
 
     int getTamanhoListaEtiqueta(const int& vertice_indice) const{
         verificacaoPadrao(vertice_indice);
-        return etiqueta[vertice_indice]->getTamanhoLista();
+        return etiqueta[vertice_indice]->getQuantidadeElementos();
     }
 
     Etiqueta<TYPE> getEtiquetaValida(const int& vertice_indice)
@@ -89,11 +89,17 @@ public:
 
     void inserirEtiqueta(const int& vertice_indice, const Etiqueta<TYPE>& item){
         verificacaoPadrao(vertice_indice);
+        if (getEtiquetaValida(vertice_indice).getSituacaoVertice()){
+            throw QString("Ja tem uma etiqueta true");
+        }
         etiqueta[vertice_indice]->inserirInicio(item);
     }
 
     void inserirEtiquetaPosicao(const int& vertice_indice, const int& posicao, const Etiqueta<TYPE>& item){
         verificacaoPadrao(vertice_indice);
+        if (getEtiquetaValida(vertice_indice).getSituacaoVertice()){
+            throw QString("Ja tem uma etiqueta true");
+        }
         etiqueta[vertice_indice]->inserirPosicao(posicao, item);
     }
 
@@ -118,7 +124,7 @@ public:
                                     etiqueta_valida.getQuantidadeArestasVisitadas() + 1,
                                     true);
                 vertice = grafo_temp.getVertice();
-                inserirEtiqueta(vertice_indice, item);
+                inserirEtiqueta(vertice - 1, item);
             }else{
                 for (int j = 0; j < tamanho_lista_grafo; ++j){
                     NOGrafo<TYPE> grafo_temp = grafo->getNOGrafo(vertice_indice, j);

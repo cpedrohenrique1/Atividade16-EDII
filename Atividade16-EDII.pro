@@ -10,8 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp \
-    tabela.cpp
+    mainwindow.cpp
 
 HEADERS += \
     caminho.h \
@@ -22,8 +21,7 @@ HEADERS += \
     lista.h \
     mainwindow.h \
     no.h \
-    nografo.h \
-    tabela.h
+    nografo.h
 
 FORMS += \
     mainwindow.ui
