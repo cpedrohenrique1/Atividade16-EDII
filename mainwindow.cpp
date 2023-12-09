@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
             std::cout << "Quantidade arestas visitadas: " << temp.getQuantidadeArestasVisitadas() << '\n';
             std::cout << "Situacao Vertice: " << temp.getSituacaoVertice() << '\n';
             std::cout << '\n';
-        }   
+        }
         std::cout << "Fim\n";
         if (grafo){
             delete grafo;

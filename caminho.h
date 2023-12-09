@@ -89,17 +89,11 @@ public:
 
     void inserirEtiqueta(const int& vertice_indice, const Etiqueta<TYPE>& item){
         verificacaoPadrao(vertice_indice);
-        if (getEtiquetaValida(vertice_indice).getSituacaoVertice()){
-            throw QString("Ja tem uma etiqueta true");
-        }
         etiqueta[vertice_indice]->inserirInicio(item);
     }
 
     void inserirEtiquetaPosicao(const int& vertice_indice, const int& posicao, const Etiqueta<TYPE>& item){
         verificacaoPadrao(vertice_indice);
-        if (getEtiquetaValida(vertice_indice).getSituacaoVertice()){
-            throw QString("Ja tem uma etiqueta true");
-        }
         etiqueta[vertice_indice]->inserirPosicao(posicao, item);
     }
 
