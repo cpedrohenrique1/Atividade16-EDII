@@ -87,6 +87,15 @@ public:
         return getEtiqueta(vertice_indice, getPosicaoMenorCusto(vertice_indice));
     }
 
+    Etiqueta<TYPE> getEtiquetaMenorCusto(const int& vertice_indice1, const int& vertice_indice2){
+        Etiqueta<TYPE> etiqueta1 = getEtiqueta(vertice_indice1, getPosicaoMenorCusto(vertice_indice1));
+        Etiqueta<TYPE> etiqueta2 = getEtiqueta(vertice_indice2, getPosicaoMenorCusto(vertice_indice2));
+        if (etiqueta1.getCustoAcumulado() > etiqueta2.getCustoAcumulado()){
+            return etiqueta2;
+        }
+        return etiqueta1;
+    }
+
     void inserirEtiqueta(const int& vertice_indice, const Etiqueta<TYPE>& item){
         verificacaoPadrao(vertice_indice);
         etiqueta[vertice_indice]->inserirInicio(item);
@@ -144,7 +153,7 @@ public:
                 for (int j = 1; j < tamanho_lista_grafo; ++j){
                     int vertice_temp = grafo->getNOGrafo(vertice_indice, j).getVertice();
                     int custo_temp = getEtiquetaMenorCusto(vertice_temp - 1).getCustoAcumulado();
-                    if (custo_menor > custo_temp){
+                    if (custo_temp < custo_menor){
                         custo_menor = custo_temp;
                         vertice_menor = vertice_temp;
                     }
