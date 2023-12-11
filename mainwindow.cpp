@@ -28,14 +28,26 @@ MainWindow::MainWindow(QWidget *parent)
         // grafo->inserirAresta(4, 6, 25);
         Caminho<int> caminho(grafo);
         caminho.encontrarCaminho(1);
-        for (int i = 0; i < 6; ++i){
+        for (int i = 0; i < 5; ++i){
             Etiqueta<int> temp = caminho.getEtiquetaValida(i);
-            std::cout << "Vertice " << i + 1 << '\n';
-            std::cout << "Custo acumulado: " << temp.getCustoAcumulado() << '\n';
-            std::cout << "Vertice Precedente: " << temp.getVerticePrecedente() << '\n';
-            std::cout << "Quantidade arestas visitadas: " << temp.getQuantidadeArestasVisitadas() << '\n';
-            std::cout << "Situacao Vertice: " << temp.getSituacaoVertice() << '\n';
-            std::cout << '\n';
+            if (i == 2){
+                std::cout << "Etiqueta vertice 3";
+                for (int j = 0; j < caminho.getTamanhoListaEtiqueta(i); ++j){
+                    Etiqueta<int> temp2 = caminho.getEtiqueta(i, j);
+                    std::cout << "Vertice " << i + 1 << '\n';
+                    std::cout << "Custo acumulado: " << temp2.getCustoAcumulado() << '\n';
+                    std::cout << "Vertice Precedente: " << temp2.getVerticePrecedente() << '\n';
+                    std::cout << "Quantidade arestas visitadas: " << temp2.getQuantidadeArestasVisitadas() << '\n';
+                    std::cout << "Situacao Vertice: " << temp2.getSituacaoVertice() << '\n';
+                }
+            }else{
+                std::cout << "Vertice " << i + 1 << '\n';
+                std::cout << "Custo acumulado: " << temp.getCustoAcumulado() << '\n';
+                std::cout << "Vertice Precedente: " << temp.getVerticePrecedente() << '\n';
+                std::cout << "Quantidade arestas visitadas: " << temp.getQuantidadeArestasVisitadas() << '\n';
+                std::cout << "Situacao Vertice: " << temp.getSituacaoVertice() << '\n';
+                std::cout << '\n';
+            }
         }
         std::cout << "Fim\n";
         if (grafo){

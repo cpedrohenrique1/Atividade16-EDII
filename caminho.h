@@ -46,7 +46,7 @@ public:
             throw QString("Vertice invalido");
         }
     }
-    
+
     Etiqueta<TYPE> getEtiqueta(const int& vertice_indice, const int& posicao) const{
         verificacaoPadrao(vertice_indice);
         return etiqueta[vertice_indice]->acessarPosicao(posicao);
@@ -75,7 +75,7 @@ public:
         int menor_custo = getEtiqueta(vertice_indice, 0).getCustoAcumulado();
         for (int i = 1; i < getTamanhoListaEtiqueta(vertice_indice); ++i){
             int custo_aux = getEtiqueta(vertice_indice, i).getCustoAcumulado();
-            if (menor_custo > custo_aux){
+            if (custo_aux < menor_custo){
                 menor_custo = custo_aux;
                 posicao = i;
             }
@@ -102,6 +102,31 @@ public:
         return etiqueta[vertice_indice]->retirarPosicao(posicao);
     }
 
+    int criarEtiquetaTrue(const int& vertice_indice){
+        verificacaoPadrao(vertice_indice)
+        NOGrafo<TYPE> grafo_temp = grafo->getNOGrafo(vertice_indice, 0);
+        Etiqueta<TYPE> etiqueta_valida = getEtiquetaValida(vertice_indice);
+        Etiqueta<TYPE> item(grafo_temp.getPeso() + etiqueta_valida.getCustoAcumulado(),
+                            vertice_indice + 1,
+                            etiqueta_valida.getQuantidadeArestasVisitadas() + 1,
+                            true);
+        int vertice = grafo_temp.getVertice();
+        inserirEtiqueta(vertice - 1, item);
+        return vertice;
+    }
+
+    void criarEtiquetaFalse(const int& vertice_indice){
+        for (int j = 0; j < grafo->getTamanhoListaGrafo(vertice_indice); ++j){
+            NOGrafo<TYPE> grafo_temp = grafo->getNOGrafo(vertice_indice, j);
+            Etiqueta<TYPE> etiqueta_valida = getEtiquetaValida(vertice_indice);
+            Etiqueta<TYPE> item(grafo_temp.getPeso() + etiqueta_valida.getCustoAcumulado(),
+                                vertice_indice + 1,
+                                etiqueta_valida.getQuantidadeArestasVisitadas() + 1,
+                                false);
+            inserirEtiqueta(grafo_temp.getVertice() - 1, item);
+        }
+    }
+
     void encontrarCaminho(int vertice){
         Etiqueta<TYPE> primeira_etiqueta(TYPE(), 0, 0, true);
         inserirEtiqueta(vertice - 1, primeira_etiqueta);
@@ -111,24 +136,9 @@ public:
             int tamanho_lista_grafo = grafo->getTamanhoListaGrafo(vertice_indice);
             if (tamanho_lista_grafo == 1)
             {
-                NOGrafo<TYPE> grafo_temp = grafo->getNOGrafo(vertice_indice, 0);
-                Etiqueta<TYPE> etiqueta_valida = getEtiquetaValida(vertice_indice);
-                Etiqueta<TYPE> item(grafo_temp.getPeso() + etiqueta_valida.getCustoAcumulado(),
-                                    vertice,
-                                    etiqueta_valida.getQuantidadeArestasVisitadas() + 1,
-                                    true);
-                vertice = grafo_temp.getVertice();
-                inserirEtiqueta(vertice - 1, item);
+                vertice = criarEtiquetaTrue(vertice_indice);
             }else{
-                for (int j = 0; j < tamanho_lista_grafo; ++j){
-                    NOGrafo<TYPE> grafo_temp = grafo->getNOGrafo(vertice_indice, j);
-                    Etiqueta<TYPE> etiqueta_valida = getEtiquetaValida(vertice_indice);
-                    Etiqueta<TYPE> item(grafo_temp.getPeso() + etiqueta_valida.getCustoAcumulado(),
-                                        vertice,
-                                        etiqueta_valida.getQuantidadeArestasVisitadas() + 1,
-                                        false);
-                    inserirEtiqueta(grafo_temp.getVertice() - 1, item);
-                }
+                criarEtiquetaFalse(vertice_indice);
                 int vertice_menor = grafo->getNOGrafo(vertice_indice, 0).getVertice();
                 int custo_menor = getEtiquetaMenorCusto(vertice_menor - 1).getCustoAcumulado();
                 for (int j = 1; j < tamanho_lista_grafo; ++j){
@@ -139,10 +149,10 @@ public:
                         vertice_menor = vertice_temp;
                     }
                 }
-                int etiqueta_menor_posicao = getPosicaoMenorCusto(vertice_menor - 1);
-                Etiqueta<TYPE> etiqueta_menor = retirarEtiquetaPosicao(vertice_menor - 1, etiqueta_menor_posicao);
+                int menor_posicao = getPosicaoMenorCusto(vertice_menor - 1);
+                Etiqueta<TYPE> etiqueta_menor = retirarEtiquetaPosicao(vertice_menor - 1, menor_posicao);
                 etiqueta_menor.setSituacaoVertice(true);
-                inserirEtiquetaPosicao(vertice_menor - 1, etiqueta_menor_posicao, etiqueta_menor);
+                inserirEtiquetaPosicao(vertice_menor - 1, menor_posicao, etiqueta_menor);
                 vertice = vertice_menor;
             }
         }
