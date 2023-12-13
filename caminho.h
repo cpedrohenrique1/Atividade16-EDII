@@ -87,15 +87,6 @@ public:
         return getEtiqueta(vertice_indice, getPosicaoMenorCusto(vertice_indice));
     }
 
-    Etiqueta<TYPE> getEtiquetaMenorCusto(const int& vertice_indice1, const int& vertice_indice2){
-        Etiqueta<TYPE> etiqueta1 = getEtiqueta(vertice_indice1, getPosicaoMenorCusto(vertice_indice1));
-        Etiqueta<TYPE> etiqueta2 = getEtiqueta(vertice_indice2, getPosicaoMenorCusto(vertice_indice2));
-        if (etiqueta1.getCustoAcumulado() > etiqueta2.getCustoAcumulado()){
-            return etiqueta2;
-        }
-        return etiqueta1;
-    }
-
     void inserirEtiqueta(const int& vertice_indice, const Etiqueta<TYPE>& item){
         verificacaoPadrao(vertice_indice);
         etiqueta[vertice_indice]->inserirInicio(item);
@@ -112,28 +103,45 @@ public:
     }
 
     int criarEtiquetaTrue(const int& vertice_indice){
-        verificacaoPadrao(vertice_indice)
+        verificacaoPadrao(vertice_indice);
         NOGrafo<TYPE> grafo_temp = grafo->getNOGrafo(vertice_indice, 0);
+        int vertice = grafo_temp.getVertice();
         Etiqueta<TYPE> etiqueta_valida = getEtiquetaValida(vertice_indice);
         Etiqueta<TYPE> item(grafo_temp.getPeso() + etiqueta_valida.getCustoAcumulado(),
-                            vertice_indice + 1,
+                            vertice,
                             etiqueta_valida.getQuantidadeArestasVisitadas() + 1,
                             true);
-        int vertice = grafo_temp.getVertice();
         inserirEtiqueta(vertice - 1, item);
         return vertice;
     }
 
     void criarEtiquetaFalse(const int& vertice_indice){
-        for (int j = 0; j < grafo->getTamanhoListaGrafo(vertice_indice); ++j){
-            NOGrafo<TYPE> grafo_temp = grafo->getNOGrafo(vertice_indice, j);
-            Etiqueta<TYPE> etiqueta_valida = getEtiquetaValida(vertice_indice);
+        verificacaoPadrao(vertice_indice);
+        Etiqueta<TYPE> etiqueta_valida = getEtiquetaValida(vertice_indice);
+        for (int i = 0; i < grafo->getTamanhoListaGrafo(vertice_indice); ++i){
+            NOGrafo<TYPE> grafo_temp = grafo->getNOGrafo(vertice_indice, i);
             Etiqueta<TYPE> item(grafo_temp.getPeso() + etiqueta_valida.getCustoAcumulado(),
                                 vertice_indice + 1,
                                 etiqueta_valida.getQuantidadeArestasVisitadas() + 1,
                                 false);
             inserirEtiqueta(grafo_temp.getVertice() - 1, item);
         }
+    }
+
+    int getVerticeMenorCusto(const int& vertice_indice){
+        verificacaoPadrao(vertice_indice);
+        NOGrafo<TYPE> grafo_menor = grafo->getNOGrafo(vertice_indice, 0);
+        Etiqueta<TYPE> etiqueta_menor = getEtiquetaMenorCusto(grafo_menor.getVertice() - 1);
+        int vertice_menor = grafo_menor.getVertice();
+        for (int i = 1; i < grafo->getTamanhoListaGrafo(vertice_indice); ++i){
+            int vertice_temp = grafo->getNOGrafo(vertice_indice, i).getVertice();
+            Etiqueta<TYPE> etiqueta_temp = getEtiquetaMenorCusto(vertice_temp - 1);
+            if (etiqueta_temp.getCustoAcumulado() < etiqueta_menor.getCustoAcumulado()){
+                etiqueta_menor = etiqueta_temp;
+                vertice_menor = vertice_temp;
+            }
+        }
+        return vertice_menor;
     }
 
     void encontrarCaminho(int vertice){
@@ -143,26 +151,15 @@ public:
         {
             int vertice_indice = vertice - 1;
             int tamanho_lista_grafo = grafo->getTamanhoListaGrafo(vertice_indice);
-            if (tamanho_lista_grafo == 1)
+            if (tamanho_lista_grafo == 1 && getTamanhoListaEtiqueta(grafo->getNOGrafo(vertice_indice, 0).getVertice() - 1) == 0)
             {
                 vertice = criarEtiquetaTrue(vertice_indice);
             }else{
                 criarEtiquetaFalse(vertice_indice);
-                int vertice_menor = grafo->getNOGrafo(vertice_indice, 0).getVertice();
-                int custo_menor = getEtiquetaMenorCusto(vertice_menor - 1).getCustoAcumulado();
-                for (int j = 1; j < tamanho_lista_grafo; ++j){
-                    int vertice_temp = grafo->getNOGrafo(vertice_indice, j).getVertice();
-                    int custo_temp = getEtiquetaMenorCusto(vertice_temp - 1).getCustoAcumulado();
-                    if (custo_temp < custo_menor){
-                        custo_menor = custo_temp;
-                        vertice_menor = vertice_temp;
-                    }
-                }
-                int menor_posicao = getPosicaoMenorCusto(vertice_menor - 1);
-                Etiqueta<TYPE> etiqueta_menor = retirarEtiquetaPosicao(vertice_menor - 1, menor_posicao);
+                vertice = getVerticeMenorCusto(vertice_indice);
+                Etiqueta<TYPE> etiqueta_menor = retirarEtiquetaPosicao(vertice - 1, getPosicaoMenorCusto(vertice - 1));
                 etiqueta_menor.setSituacaoVertice(true);
-                inserirEtiquetaPosicao(vertice_menor - 1, menor_posicao, etiqueta_menor);
-                vertice = vertice_menor;
+                inserirEtiqueta(vertice - 1, etiqueta_menor);
             }
         }
     }
