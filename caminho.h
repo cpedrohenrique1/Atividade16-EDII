@@ -152,7 +152,7 @@ public:
     void encontrarCaminho(int vertice){
         Etiqueta<TYPE> primeira_etiqueta(TYPE(), 0, 0, true);
         inserirEtiqueta(vertice - 1, primeira_etiqueta);
-        for (int i = 1; i < n_vertices; ++i)
+        for (int i = 0; i < n_vertices; ++i)
         {
             int vertice_indice = vertice - 1;
             int tamanho_lista_grafo = grafo->getTamanhoListaGrafo(vertice_indice);
