@@ -144,6 +144,11 @@ public:
         return vertice_menor;
     }
 
+    bool ListaEtiquetaEstaVazia(int vertice_indice){
+        verificacaoPadrao(vertice_indice);
+        return etiqueta[vertice_indice]->estaVazia();
+    }
+
     void encontrarCaminho(int vertice){
         Etiqueta<TYPE> primeira_etiqueta(TYPE(), 0, 0, true);
         inserirEtiqueta(vertice - 1, primeira_etiqueta);
@@ -151,7 +156,7 @@ public:
         {
             int vertice_indice = vertice - 1;
             int tamanho_lista_grafo = grafo->getTamanhoListaGrafo(vertice_indice);
-            if (tamanho_lista_grafo == 1 && getTamanhoListaEtiqueta(grafo->getNOGrafo(vertice_indice, 0).getVertice() - 1) == 0)
+            if (tamanho_lista_grafo == 1 && ListaEtiquetaEstaVazia(grafo->getNOGrafo(vertice_indice, 0).getVertice() - 1))
             {
                 vertice = criarEtiquetaTrue(vertice_indice);
             }else{
