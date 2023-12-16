@@ -40,8 +40,28 @@ public:
             throw QString("Nao foi possivel alocar memoria");
         }
     }
-    
+
     void inserirAresta(const int& vertice1, const int& vertice2, const TYPE& peso)
+    {
+        if (existeAresta(vertice1, vertice2)){
+            throw QString("Aresta ja existe");
+        }
+        inserir(vertice1, vertice2, peso);
+    }
+
+    void alterarAresta(const int &vertice1, const int &vertice2, const TYPE &peso)
+    {
+        if (existeAresta(vertice1, vertice2)){
+            alterar(vertice1, vertice2, peso);
+        }
+    }
+
+    int getNVertices() const
+    {
+        return n_vertices;
+    }
+
+    bool existeAresta(const int& vertice1, const int& vertice2) const
     {
         if ((vertice1 <= 0 || vertice1 > n_vertices) || (vertice2 <= 0 || vertice2 > n_vertices))
         {
@@ -60,48 +80,41 @@ public:
         {
             if (lista[vertice1_temp]->acessarPosicao(i).getVertice() == vertice2)
             {
-                throw QString("Aresta ja existe");
+                return true;
             }
         }
-        inserir(vertice1, vertice2, peso);
+        return false;
     }
 
-    void alterarAresta(const int &vertice1, const int &vertice2, const TYPE &peso)
-    {
+    int getPeso(const int& vertice1, const int& vertice2){
         if ((vertice1 <= 0 || vertice1 > n_vertices) || (vertice2 <= 0 || vertice2 > n_vertices))
         {
             throw QString("Vertice nao existe");
         }
         if (vertice1 == vertice2)
         {
-            throw QString("Vertice nao pode ser igual");
+            return 0;
         }
         if (!lista)
         {
             throw QString("Lista nao criada");
         }
-        alterar(vertice1, vertice2, peso);
-    }
-    int getNVertices() const
-    {
-        return n_vertices;
+        int vertice1_temp = vertice1 - 1;
+        for (int i = 0; i < lista[vertice1_temp]->getQuantidadeElementos(); ++i)
+        {
+            if (lista[vertice1_temp]->acessarPosicao(i).getVertice() == vertice2)
+            {
+                return lista[vertice1_temp]->acessarPosicao(i).getPeso();
+            }
+        }
+        return 0;
     }
 
     void removerAresta(const int &vertice1, const int &vertice2)
     {
-        if ((vertice1 <= 0 || vertice1 > n_vertices) || (vertice2 <= 0 || vertice2 > n_vertices))
-        {
-            throw QString("Vertice nao existe");
+        if (existeAresta){
+            remover(vertice1, vertice2);
         }
-        if (vertice1 == vertice2)
-        {
-            throw QString("Vertice nao pode ser igual");
-        }
-        if (!lista)
-        {
-            throw QString("Lista nao criada");
-        }
-        remover(vertice1, vertice2);
     }
     NOGrafo<TYPE> getNOGrafo(const int &indice, const int &posicao) const
     {

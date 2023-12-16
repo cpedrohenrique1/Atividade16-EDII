@@ -6,6 +6,9 @@
 #include "grafodirecionado.h"
 #include "grafonaoorientado.h"
 #include "caminho.h"
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include "grafoDesenho.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,5 +24,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    GrafoDirecionado<int> *grafo;
 };
 #endif // MAINWINDOW_H

@@ -3,19 +3,19 @@
 
 #include <QFile>
 #include <QTextStream>
-#include "grafo.h"
+#include "grafodirecionado.h"
 
 class Arquivo
 {
 private:
-    Grafo *vetor;
+    GrafoDirecionado<int> *vetor;
     int n_vertices;
 public:
     Arquivo();
     void abrir();
     void carregar_elementos(QTextStream &in);
     int getVertices()const;
-    Grafo* getVetor()const;
+    NOGrafo<int> getVetor(const int& linha, const int& coluna)const;
 };
 
 #endif // ARQUIVO_H

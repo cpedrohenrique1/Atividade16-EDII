@@ -18,6 +18,7 @@ HEADERS += \
     caminho.h \
     etiqueta.h \
     grafo.h \
+    grafoDesenho.h \
     grafodirecionado.h \
     grafonaoorientado.h \
     lista.h \
