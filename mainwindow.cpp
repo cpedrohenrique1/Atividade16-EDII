@@ -28,7 +28,7 @@ void MainWindow::on_pushButton_criar_clicked()
             cena = 0;
         }
         grafo = new GrafoDirecionado<int>(ui->lineEdit_tamanho_grafo->text().toInt());
-        *vertices = new Lista<Vertice *>();
+        vertices = new Lista<Vertice *>;
         cena = new QGraphicsScene();
         int x = 0;
         int tamanho_grafo = grafo->getNVertices();
@@ -40,21 +40,21 @@ void MainWindow::on_pushButton_criar_clicked()
                 Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
                 cena->addItem(vertice);
                 x += 150;
-                vertices.inserirInicio(vertice);
+                vertices->inserirInicio(vertice);
             }
             else if (i % 3 == 1)
             {
                 Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
                 cena->addItem(vertice);
                 x += 150;
-                vertices.inserirInicio(vertice);
+                vertices->inserirInicio(vertice);
             }
             else
             {
                 Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
                 cena->addItem(vertice);
                 x += 150;
-                vertices.inserirInicio(vertice);
+                vertices->inserirInicio(vertice);
             }
         }
         ui->graphicsView->setScene(cena);
@@ -84,16 +84,16 @@ void MainWindow::on_pushButton_inserir_clicked()
         //     for (int j = 0; j < grafo->getTamanhoListaGrafo(i); ++j)
         //     {
         //         NOGrafo<int> no_grafo = grafo->getNOGrafo(i, j);
-        //         for (int k = 0; k < vertices.getQuantidadeElementos(); ++k)
+        //         for (int k = 0; k < vertices->getQuantidadeElementos(); ++k)
         //         {
-        //             if (vertices.acessarPosicao(k)->getId() == i + 1)
+        //             if (vertices->acessarPosicao(k)->getId() == i + 1)
         //             {
-        //                 for (int l = 0; l < vertices.getQuantidadeElementos(); ++l)
+        //                 for (int l = 0; l < vertices->getQuantidadeElementos(); ++l)
         //                 {
-        //                     if (vertices.acessarPosicao(l)->getId() == no_grafo.getVertice())
+        //                     if (vertices->acessarPosicao(l)->getId() == no_grafo.getVertice())
         //                     {
-        //                         Aresta *aresta = new Aresta(vertices.acessarPosicao(k),
-        //                                                     vertices.acessarPosicao(l),
+        //                         Aresta *aresta = new Aresta(vertices->acessarPosicao(k),
+        //                                                     vertices->acessarPosicao(l),
         //                                                     no_grafo.getPeso());
         //                         cena->addItem(aresta);
         //                     }
@@ -177,7 +177,13 @@ void MainWindow::on_pushButton_abrir_arquivo_clicked()
             delete cena;
             cena = 0;
         }
+        if (vertices)
+        {
+            delete vertices;
+            vertices = 0;
+        }
         grafo = new GrafoDirecionado<int>(arquivo.getTamanhoGrafo());
+        vertices = new Lista<Vertice *>;
         for (int i = 0; i < arquivo.getTamanhoGrafo(); ++i)
         {
             for (int j = 0; j < arquivo.getTamanhoListaGrafo(i); ++j)
@@ -186,7 +192,6 @@ void MainWindow::on_pushButton_abrir_arquivo_clicked()
                 grafo->inserirAresta(i + 1, no_grafo.getVertice(), no_grafo.getPeso());
             }
         }
-        Lista<Vertice *> vertices;
         cena = new QGraphicsScene();
         int x = 0;
         int tamanho_grafo = grafo->getNVertices();
@@ -198,21 +203,21 @@ void MainWindow::on_pushButton_abrir_arquivo_clicked()
                 Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
                 cena->addItem(vertice);
                 x += 150;
-                vertices.inserirInicio(vertice);
+                vertices->inserirInicio(vertice);
             }
             else if (i % 3 == 1)
             {
                 Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
                 cena->addItem(vertice);
                 x += 150;
-                vertices.inserirInicio(vertice);
+                vertices->inserirInicio(vertice);
             }
             else
             {
                 Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
                 cena->addItem(vertice);
                 x += 150;
-                vertices.inserirInicio(vertice);
+                vertices->inserirInicio(vertice);
             }
         }
         // Criacao arestas
@@ -221,16 +226,16 @@ void MainWindow::on_pushButton_abrir_arquivo_clicked()
             for (int j = 0; j < grafo->getTamanhoListaGrafo(i); ++j)
             {
                 NOGrafo<int> no_grafo = grafo->getNOGrafo(i, j);
-                for (int k = 0; k < vertices.getQuantidadeElementos(); ++k)
+                for (int k = 0; k < vertices->getQuantidadeElementos(); ++k)
                 {
-                    if (vertices.acessarPosicao(k)->getId() == i + 1)
+                    if (vertices->acessarPosicao(k)->getId() == i + 1)
                     {
-                        for (int l = 0; l < vertices.getQuantidadeElementos(); ++l)
+                        for (int l = 0; l < vertices->getQuantidadeElementos(); ++l)
                         {
-                            if (vertices.acessarPosicao(l)->getId() == no_grafo.getVertice())
+                            if (vertices->acessarPosicao(l)->getId() == no_grafo.getVertice())
                             {
-                                Aresta *aresta = new Aresta(vertices.acessarPosicao(k),
-                                                            vertices.acessarPosicao(l),
+                                Aresta *aresta = new Aresta(vertices->acessarPosicao(k),
+                                                            vertices->acessarPosicao(l),
                                                             no_grafo.getPeso());
                                 cena->addItem(aresta->getPeso());
                                 cena->addItem(aresta);

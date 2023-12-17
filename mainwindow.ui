@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>620</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,9 +18,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>101</y>
+      <y>131</y>
       <width>791</width>
-      <height>451</height>
+      <height>441</height>
      </rect>
     </property>
    </widget>
@@ -128,6 +128,35 @@
     <property name="text">
      <string>Abrir arquivo</string>
     </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>100</y>
+      <width>441</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Encontrar caminho a partir de:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit_vertice_caminho"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_encontrar_caminho">
+       <property name="text">
+        <string>Encontrar</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

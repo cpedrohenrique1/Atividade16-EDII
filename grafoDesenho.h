@@ -43,7 +43,8 @@ private:
     static const int arrowSize = 10;
 
 public:
-    Aresta(Vertice* start, Vertice* end, int peso) : QGraphicsLineItem()
+    Aresta(Vertice* start, Vertice* end, int peso) : QGraphicsLineItem(),
+        peso(0)
     {
         QLineF line(start->rect().center(), end->rect().center());
         double angle = std::atan2(-line.dy(), line.dx());
@@ -81,7 +82,9 @@ public:
 
     ~Aresta()
     {
-        delete peso;
+        if (peso){
+            delete peso;
+        }
     }
 };
 
