@@ -2,93 +2,257 @@
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow)
+    : QMainWindow(parent), ui(new Ui::MainWindow),
+      grafo(0), cena(0)
 {
+    srand(time(0));
     ui->setupUi(this);
+}
+
+void MainWindow::on_pushButton_criar_clicked()
+{
     try
     {
-        grafo = new GrafoDirecionado<int>(5);
-        grafo->inserirAresta(1, 5, 100);
-        grafo->inserirAresta(5, 2, 120);
-        grafo->inserirAresta(5, 4, 200);
-        grafo->inserirAresta(2, 3, 90);
-        grafo->inserirAresta(2, 4, 330);
-        grafo->inserirAresta(4, 3, 180);
-        grafo->inserirAresta(3, 2, 110);
-        Lista<Vertice *> vertices;
-        Lista<Aresta *> arestas;
-        QGraphicsScene *scene = new QGraphicsScene();
-        Caminho<int> caminho(grafo);
-        caminho.encontrarCaminho(1);
-        int x = 0;
-        for (int i = 0; i < grafo->getNVertices(); ++i)
+        if (ui->lineEdit_tamanho_grafo->text().isEmpty())
         {
-            Etiqueta<int> etiqueta_temp = caminho.getEtiquetaValida(i);
+            throw QString("Informe o tamanho do grafo");
+        }
+        if (grafo)
+        {
+            delete grafo;
+            grafo = 0;
+        }
+        if (cena)
+        {
+            delete cena;
+            cena = 0;
+        }
+        grafo = new GrafoDirecionado<int>(ui->lineEdit_tamanho_grafo->text().toInt());
+        *vertices = new Lista<Vertice *>();
+        cena = new QGraphicsScene();
+        int x = 0;
+        int tamanho_grafo = grafo->getNVertices();
+        // Criacao vertices
+        for (int i = 0; i < tamanho_grafo; ++i)
+        {
             if (i % 3 == 0)
             {
-                Vertice *vertice = new Vertice(x + 100 * (i % 3), 150 * (i % 3), 20, i + 1);
-                EtiquetaDesenho *etiqueta = new EtiquetaDesenho(25 + (x + 100 * (i % 3)),
-                                                                (150 * (i % 3)) - 30,
-                                                                250,
-                                                                80,
-                                                                etiqueta_temp.getCustoAcumulado(),
-                                                                true,
-                                                                etiqueta_temp.getVerticePrecedente(),
-                                                                etiqueta_temp.getQuantidadeArestasVisitadas());
-                scene->addItem(etiqueta);
-                x = x + 150;
+                Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
+                cena->addItem(vertice);
+                x += 150;
                 vertices.inserirInicio(vertice);
-                scene->addItem(vertice);
             }
             else if (i % 3 == 1)
             {
-                Vertice *vertice = new Vertice(x + 100 * (i % 3), 150 * (i % 3), 20, i + 1);
-                EtiquetaDesenho *etiqueta = new EtiquetaDesenho(25 + (x + 100 * (i % 3)),
-                                                                (150 * (i % 3)) - 30,
-                                                                250,
-                                                                80,
-                                                                etiqueta_temp.getCustoAcumulado(),
-                                                                true,
-                                                                etiqueta_temp.getVerticePrecedente(),
-                                                                etiqueta_temp.getQuantidadeArestasVisitadas());
-                scene->addItem(etiqueta);
-                x = x + 150;
+                Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
+                cena->addItem(vertice);
+                x += 150;
                 vertices.inserirInicio(vertice);
-                scene->addItem(vertice);
             }
             else
             {
-                Vertice *vertice = new Vertice(x + 100 * (i % 3), 150 * (i % 3), 20, i + 1);
-                EtiquetaDesenho *etiqueta = new EtiquetaDesenho(25 + (x + 100 * (i % 3)),
-                                                                (150 * (i % 3)) - 30,
-                                                                250,
-                                                                80,
-                                                                etiqueta_temp.getCustoAcumulado(),
-                                                                true,
-                                                                etiqueta_temp.getVerticePrecedente(),
-                                                                etiqueta_temp.getQuantidadeArestasVisitadas());
-                scene->addItem(etiqueta);
-                x = x + 150;
+                Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
+                cena->addItem(vertice);
+                x += 150;
                 vertices.inserirInicio(vertice);
-                scene->addItem(vertice);
             }
         }
+        ui->graphicsView->setScene(cena);
 
-        for (int i = 0; i < grafo->getNVertices(); ++i){
-            for (int j = 0; j < grafo->getTamanhoListaGrafo(i); ++j){
-                NOGrafo<int> no_grafo = grafo->getNOGrafo(i, j);
-                Aresta *aresta = new Aresta(vertices.acessarPosicao(i),
-                                            vertices.acessarPosicao(no_grafo.getVertice() - 1),
-                                            no_grafo.getPeso());
-                arestas.inserirInicio(aresta);
-                scene->addItem(aresta);
-            }
-        }
-        ui->graphicsView->setScene(scene);
     }
     catch (std::bad_alloc &e)
     {
-        QMessageBox::critical(this, "Erro", "Nao foi possivel alocar memoria");
+        QMessageBox::critical(this, "ERRO", "Erro ao alocar memoria");
+    }
+    catch (QString &erro)
+    {
+        QMessageBox::critical(this, "ERRO", erro);
+    }
+    catch (...)
+    {
+        QMessageBox::critical(this, "ERRO", "Erro desconhecido");
+    }
+}
+
+void MainWindow::on_pushButton_inserir_clicked()
+{
+    try
+    {
+        // // Criacao arestas
+        // for (int i = 0; i < grafo->getNVertices(); ++i)
+        // {
+        //     for (int j = 0; j < grafo->getTamanhoListaGrafo(i); ++j)
+        //     {
+        //         NOGrafo<int> no_grafo = grafo->getNOGrafo(i, j);
+        //         for (int k = 0; k < vertices.getQuantidadeElementos(); ++k)
+        //         {
+        //             if (vertices.acessarPosicao(k)->getId() == i + 1)
+        //             {
+        //                 for (int l = 0; l < vertices.getQuantidadeElementos(); ++l)
+        //                 {
+        //                     if (vertices.acessarPosicao(l)->getId() == no_grafo.getVertice())
+        //                     {
+        //                         Aresta *aresta = new Aresta(vertices.acessarPosicao(k),
+        //                                                     vertices.acessarPosicao(l),
+        //                                                     no_grafo.getPeso());
+        //                         cena->addItem(aresta);
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // // Criacao Etiquetas
+        // x = 0;
+        // for (int i = 0; i < tamanho_grafo; ++i)
+        // {
+        //     Etiqueta<int> etiqueta_temp = caminho.getEtiquetaValida(i);
+        //     EtiquetaDesenho *etiqueta = new EtiquetaDesenho(25 + x,
+        //                                                     (150 * (i % 3)) - 30,
+        //                                                     250,
+        //                                                     80,
+        //                                                     etiqueta_temp.getCustoAcumulado(),
+        //                                                     true,
+        //                                                     etiqueta_temp.getVerticePrecedente(),
+        //                                                     etiqueta_temp.getQuantidadeArestasVisitadas());
+        //     etiqueta->setBrush(QBrush(Qt::white));
+        //     etiqueta->setOpacity(0.5);
+        //     cena->addItem(etiqueta);
+        //     x += 150;
+        // }
+    }
+    catch (QString &erro)
+    {
+        QMessageBox::critical(this, "ERRO", erro);
+    }
+    catch (...)
+    {
+        QMessageBox::critical(this, "ERRO", "Erro desconhecido");
+    }
+}
+
+void MainWindow::on_pushButton_alterar_clicked()
+{
+    try
+    {
+    }
+    catch (QString &erro)
+    {
+        QMessageBox::critical(this, "ERRO", erro);
+    }
+    catch (...)
+    {
+        QMessageBox::critical(this, "ERRO", "Erro desconhecido");
+    }
+}
+
+void MainWindow::on_pushButton_excluir_clicked()
+{
+    try
+    {
+    }
+    catch (QString &erro)
+    {
+        QMessageBox::critical(this, "ERRO", erro);
+    }
+    catch (...)
+    {
+        QMessageBox::critical(this, "ERRO", "Erro desconhecido");
+    }
+}
+
+void MainWindow::on_pushButton_abrir_arquivo_clicked()
+{
+    try
+    {
+        Arquivo arquivo(this);
+        arquivo.abrir();
+        if (grafo)
+        {
+            delete grafo;
+            grafo = 0;
+        }
+        if (cena)
+        {
+            delete cena;
+            cena = 0;
+        }
+        grafo = new GrafoDirecionado<int>(arquivo.getTamanhoGrafo());
+        for (int i = 0; i < arquivo.getTamanhoGrafo(); ++i)
+        {
+            for (int j = 0; j < arquivo.getTamanhoListaGrafo(i); ++j)
+            {
+                NOGrafo<int> no_grafo = arquivo.getVetor(i, j);
+                grafo->inserirAresta(i + 1, no_grafo.getVertice(), no_grafo.getPeso());
+            }
+        }
+        Lista<Vertice *> vertices;
+        cena = new QGraphicsScene();
+        int x = 0;
+        int tamanho_grafo = grafo->getNVertices();
+        // Criacao vertices
+        for (int i = 0; i < tamanho_grafo; ++i)
+        {
+            if (i % 3 == 0)
+            {
+                Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
+                cena->addItem(vertice);
+                x += 150;
+                vertices.inserirInicio(vertice);
+            }
+            else if (i % 3 == 1)
+            {
+                Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
+                cena->addItem(vertice);
+                x += 150;
+                vertices.inserirInicio(vertice);
+            }
+            else
+            {
+                Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
+                cena->addItem(vertice);
+                x += 150;
+                vertices.inserirInicio(vertice);
+            }
+        }
+        // Criacao arestas
+        for (int i = 0; i < grafo->getNVertices(); ++i)
+        {
+            for (int j = 0; j < grafo->getTamanhoListaGrafo(i); ++j)
+            {
+                NOGrafo<int> no_grafo = grafo->getNOGrafo(i, j);
+                for (int k = 0; k < vertices.getQuantidadeElementos(); ++k)
+                {
+                    if (vertices.acessarPosicao(k)->getId() == i + 1)
+                    {
+                        for (int l = 0; l < vertices.getQuantidadeElementos(); ++l)
+                        {
+                            if (vertices.acessarPosicao(l)->getId() == no_grafo.getVertice())
+                            {
+                                Aresta *aresta = new Aresta(vertices.acessarPosicao(k),
+                                                            vertices.acessarPosicao(l),
+                                                            no_grafo.getPeso());
+                                cena->addItem(aresta->getPeso());
+                                cena->addItem(aresta);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        ui->graphicsView->setScene(cena);
+    }
+    catch (std::bad_alloc &e)
+    {
+        QMessageBox::critical(this, "ERRO", "Erro ao alocar memoria");
+    }
+    catch (QString &erro)
+    {
+        QMessageBox::critical(this, "ERRO", erro);
+    }
+    catch (...)
+    {
+        QMessageBox::critical(this, "ERRO", "Erro desconhecido");
     }
 }
 
@@ -97,6 +261,14 @@ MainWindow::~MainWindow()
     if (grafo)
     {
         delete grafo;
+    }
+    if (cena)
+    {
+        delete cena;
+    }
+    if (vertices)
+    {
+        delete vertices;
     }
     delete ui;
 }

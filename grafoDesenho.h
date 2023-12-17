@@ -9,6 +9,7 @@
 #include <QGraphicsScene>
 #include "lista.h"
 #include "grafo.h"
+#include <ctime>
 
 class Vertice : public QGraphicsEllipseItem
 {
@@ -52,7 +53,14 @@ public:
         setLine(line);
         this->peso = new QGraphicsTextItem(QString::number(peso));
         QPointF midPoint = (start->rect().center() + end->rect().center()) / 2;
-        this->peso->setPos(midPoint);
+        int offsetX = 0;
+        int offsetY = 0;
+        if (rand() % 2 == 0){
+            offsetX = (rand() % 100) - 50;
+        }else{
+            offsetY = (rand() % 100) - 50;
+        }
+        this->peso->setPos(midPoint + QPointF(offsetX, offsetY));
     }
 
     QGraphicsTextItem *getPeso()

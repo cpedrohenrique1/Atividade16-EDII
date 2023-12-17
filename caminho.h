@@ -105,14 +105,13 @@ public:
     int criarEtiquetaTrue(const int& vertice_indice){
         verificacaoPadrao(vertice_indice);
         NOGrafo<TYPE> grafo_temp = grafo->getNOGrafo(vertice_indice, 0);
-        int vertice = grafo_temp.getVertice();
         Etiqueta<TYPE> etiqueta_valida = getEtiquetaValida(vertice_indice);
         Etiqueta<TYPE> item(grafo_temp.getPeso() + etiqueta_valida.getCustoAcumulado(),
-                            vertice,
+                            vertice_indice + 1,
                             etiqueta_valida.getQuantidadeArestasVisitadas() + 1,
                             true);
-        inserirEtiqueta(vertice - 1, item);
-        return vertice;
+        inserirEtiqueta(grafo_temp.getVertice() - 1, item);
+        return grafo_temp.getVertice();
     }
 
     void criarEtiquetaFalse(const int& vertice_indice){
@@ -144,7 +143,7 @@ public:
         return vertice_menor;
     }
 
-    bool ListaEtiquetaEstaVazia(int vertice_indice){
+    bool ListaEtiquetaEstaVazia(const int& vertice_indice){
         verificacaoPadrao(vertice_indice);
         return etiqueta[vertice_indice]->estaVazia();
     }
