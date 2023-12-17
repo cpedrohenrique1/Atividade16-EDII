@@ -73,46 +73,18 @@ MainWindow::MainWindow(QWidget *parent)
                 scene->addItem(vertice);
             }
         }
-        // Vertice *vertice1 = new Vertice(100, 100, 20, 1);
-        // vertices.inserirInicio(vertice1);
-        // Vertice *vertice2 = new Vertice(200, 100, 20, 2);
-        // vertices.inserirInicio(vertice2);
-        // Aresta *aresta1 = new Aresta(vertice1, vertice2, 10);
-        // arestas.inserirInicio(aresta1);
-        // scene->addItem(vertice1);
-        // scene->addItem(vertice2);
-        // scene->addItem(aresta1);
-        ui->graphicsView->setScene(scene);
-        // GrafoNaoOrientado<int> *grafo = new GrafoNaoOrientado<int>(6);
-        // grafo->inserirAresta(1, 4, 5);
-        // grafo->inserirAresta(1, 3, 15);
-        // grafo->inserirAresta(1, 2, 10);
-        // grafo->inserirAresta(2, 4, 20);
-        // grafo->inserirAresta(2, 3, 10);
-        // grafo->inserirAresta(2, 6, 10);
-        // grafo->inserirAresta(3, 5, 5);
-        // grafo->inserirAresta(4, 5, 5);
-        // grafo->inserirAresta(4, 6, 25);
 
-        // Caminho<int> caminho(grafo);
-        // caminho.encontrarCaminho(1);
-        // for (int i = 0; i < 5; ++i){
-        //     std::cout << "Vertice " << i + 1 << '\n';
-        //     for (int j = 0; j < caminho.getTamanhoListaEtiqueta(i); ++j){
-        //         std::cout << "Posicao " << j << '\n';
-        //         Etiqueta<int> temp = caminho.getEtiqueta(i, j);
-        //         std::cout << "Custo acumulado: " << temp.getCustoAcumulado() << '\n';
-        //         std::cout << "Vertice Precedente: " << temp.getVerticePrecedente() << '\n';
-        //         std::cout << "Quantidade arestas visitadas: " << temp.getQuantidadeArestasVisitadas() << '\n';
-        //         std::cout << "Situacao Vertice: " << temp.getSituacaoVertice() << '\n';
-        //     }
-        //     std::cout << '\n';
-        // }
-        // std::cout << "Fim\n";
-        // if (grafo){
-        //     delete grafo;
-        //     grafo = 0;
-        // }
+        for (int i = 0; i < grafo->getNVertices(); ++i){
+            for (int j = 0; j < grafo->getTamanhoListaGrafo(i); ++j){
+                NOGrafo<int> no_grafo = grafo->getNOGrafo(i, j);
+                Aresta *aresta = new Aresta(vertices.acessarPosicao(i),
+                                            vertices.acessarPosicao(no_grafo.getVertice() - 1),
+                                            no_grafo.getPeso());
+                arestas.inserirInicio(aresta);
+                scene->addItem(aresta);
+            }
+        }
+        ui->graphicsView->setScene(scene);
     }
     catch (std::bad_alloc &e)
     {
