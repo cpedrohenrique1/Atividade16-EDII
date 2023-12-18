@@ -150,6 +150,13 @@ void MainWindow::on_pushButton_excluir_clicked()
 {
     try
     {
+        if (!grafo){
+            throw QString("grafo nao foi criado");
+        }
+        if (!vertices){
+            throw QString("nao foi possivel achar os vertices");
+        }
+        
     }
     catch (QString &erro)
     {
@@ -171,11 +178,6 @@ void MainWindow::on_pushButton_abrir_arquivo_clicked()
         {
             delete grafo;
             grafo = 0;
-        }
-        if (cena)
-        {
-            delete cena;
-            cena = 0;
         }
         if (vertices)
         {
@@ -260,6 +262,30 @@ void MainWindow::on_pushButton_abrir_arquivo_clicked()
         QMessageBox::critical(this, "ERRO", "Erro desconhecido");
     }
 }
+
+void MainWindow::on_pushButton_encontrar_caminho_clicked()
+{
+    try{
+        if (!grafo){
+            throw QString("Grafo nao encontrado");
+        }
+        if (!cena){
+            throw QString("Cena nao encontrada (vertices desenhados na tela)");
+        }
+        if (!vertices){
+            throw QString("Lista de vertices nao encontrado");
+        }
+        if (ui->lineEdit_vertice_caminho->text().isEmpty()){
+            throw QString("vertice caminho nao pode estar vazio");
+        }
+        Caminho caminho(grafo);
+        caminho.encontrarCaminho(ui->lineEdit_vertice_caminho->text().toInt());
+
+    }catch (QString& e){
+        QMessageBox::critical(this, "erro", e);
+    }
+}
+
 
 MainWindow::~MainWindow()
 {

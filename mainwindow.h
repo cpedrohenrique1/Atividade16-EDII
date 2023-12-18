@@ -34,6 +34,8 @@ private slots:
 
     void on_pushButton_abrir_arquivo_clicked();
 
+    void on_pushButton_encontrar_caminho_clicked();
+
 private:
     Ui::MainWindow *ui;
     GrafoDirecionado<int> *grafo;

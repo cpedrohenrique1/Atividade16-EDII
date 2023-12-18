@@ -79,13 +79,6 @@ public:
         arrowHead << line().p2() << arrowP1 << arrowP2;
         painter->drawPolygon(arrowHead);
     }
-
-    ~Aresta()
-    {
-        if (peso){
-            delete peso;
-        }
-    }
 };
 
 class EtiquetaDesenho : public QGraphicsRectItem
