@@ -78,48 +78,7 @@ void MainWindow::on_pushButton_inserir_clicked()
 {
     try
     {
-        // // Criacao arestas
-        // for (int i = 0; i < grafo->getNVertices(); ++i)
-        // {
-        //     for (int j = 0; j < grafo->getTamanhoListaGrafo(i); ++j)
-        //     {
-        //         NOGrafo<int> no_grafo = grafo->getNOGrafo(i, j);
-        //         for (int k = 0; k < vertices->getQuantidadeElementos(); ++k)
-        //         {
-        //             if (vertices->acessarPosicao(k)->getId() == i + 1)
-        //             {
-        //                 for (int l = 0; l < vertices->getQuantidadeElementos(); ++l)
-        //                 {
-        //                     if (vertices->acessarPosicao(l)->getId() == no_grafo.getVertice())
-        //                     {
-        //                         Aresta *aresta = new Aresta(vertices->acessarPosicao(k),
-        //                                                     vertices->acessarPosicao(l),
-        //                                                     no_grafo.getPeso());
-        //                         cena->addItem(aresta);
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-        // // Criacao Etiquetas
-        // x = 0;
-        // for (int i = 0; i < tamanho_grafo; ++i)
-        // {
-        //     Etiqueta<int> etiqueta_temp = caminho.getEtiquetaValida(i);
-        //     EtiquetaDesenho *etiqueta = new EtiquetaDesenho(25 + x,
-        //                                                     (150 * (i % 3)) - 30,
-        //                                                     250,
-        //                                                     80,
-        //                                                     etiqueta_temp.getCustoAcumulado(),
-        //                                                     true,
-        //                                                     etiqueta_temp.getVerticePrecedente(),
-        //                                                     etiqueta_temp.getQuantidadeArestasVisitadas());
-        //     etiqueta->setBrush(QBrush(Qt::white));
-        //     etiqueta->setOpacity(0.5);
-        //     cena->addItem(etiqueta);
-        //     x += 150;
-        // }
+        
     }
     catch (QString &erro)
     {
@@ -278,9 +237,106 @@ void MainWindow::on_pushButton_encontrar_caminho_clicked()
         if (ui->lineEdit_vertice_caminho->text().isEmpty()){
             throw QString("vertice caminho nao pode estar vazio");
         }
+        delete cena;
+        cena = 0;
+        cena = new QGraphicsScene();
+        int x = 0;
+        int tamanho_grafo = grafo->getNVertices();
+        // Criacao vertices
+        for (int i = 0; i < tamanho_grafo; ++i)
+        {
+            if (i % 3 == 0)
+            {
+                Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
+                cena->addItem(vertice);
+                x += 150;
+                vertices->inserirInicio(vertice);
+            }
+            else if (i % 3 == 1)
+            {
+                Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
+                cena->addItem(vertice);
+                x += 150;
+                vertices->inserirInicio(vertice);
+            }
+            else
+            {
+                Vertice *vertice = new Vertice(x, 150 * (i % 3), 20, i + 1);
+                cena->addItem(vertice);
+                x += 150;
+                vertices->inserirInicio(vertice);
+            }
+        }
+        // Criacao arestas
+        for (int i = 0; i < grafo->getNVertices(); ++i)
+        {
+            for (int j = 0; j < grafo->getTamanhoListaGrafo(i); ++j)
+            {
+                NOGrafo<int> no_grafo = grafo->getNOGrafo(i, j);
+                for (int k = 0; k < vertices->getQuantidadeElementos(); ++k)
+                {
+                    if (vertices->acessarPosicao(k)->getId() == i + 1)
+                    {
+                        for (int l = 0; l < vertices->getQuantidadeElementos(); ++l)
+                        {
+                            if (vertices->acessarPosicao(l)->getId() == no_grafo.getVertice())
+                            {
+                                Aresta *aresta = new Aresta(vertices->acessarPosicao(k),
+                                                            vertices->acessarPosicao(l),
+                                                            no_grafo.getPeso());
+                                cena->addItem(aresta->getPeso());
+                                cena->addItem(aresta);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         Caminho caminho(grafo);
         caminho.encontrarCaminho(ui->lineEdit_vertice_caminho->text().toInt());
-
+        // Criacao arestas
+        for (int i = 0; i < grafo->getNVertices(); ++i)
+        {
+            for (int j = 0; j < grafo->getTamanhoListaGrafo(i); ++j)
+            {
+                NOGrafo<int> no_grafo = grafo->getNOGrafo(i, j);
+                for (int k = 0; k < vertices->getQuantidadeElementos(); ++k)
+                {
+                    if (vertices->acessarPosicao(k)->getId() == i + 1)
+                    {
+                        for (int l = 0; l < vertices->getQuantidadeElementos(); ++l)
+                        {
+                            if (vertices->acessarPosicao(l)->getId() == no_grafo.getVertice())
+                            {
+                                Aresta *aresta = new Aresta(vertices->acessarPosicao(k),
+                                                            vertices->acessarPosicao(l),
+                                                            no_grafo.getPeso());
+                                cena->addItem(aresta);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // Criacao Etiquetas
+        x = 0;
+        for (int i = 0; i < grafo->getNVertices(); ++i)
+        {
+            Etiqueta<int> etiqueta_temp = caminho.getEtiquetaValida(i);
+            EtiquetaDesenho *etiqueta = new EtiquetaDesenho(25 + x,
+                                                            (150 * (i % 3)) - 30,
+                                                            250,
+                                                            80,
+                                                            etiqueta_temp.getCustoAcumulado(),
+                                                            true,
+                                                            etiqueta_temp.getVerticePrecedente(),
+                                                            etiqueta_temp.getQuantidadeArestasVisitadas());
+            etiqueta->setBrush(QBrush(Qt::white));
+            etiqueta->setOpacity(0.5);
+            cena->addItem(etiqueta);
+            x += 150;
+        }
+        ui->graphicsView->setScene(cena);
     }catch (QString& e){
         QMessageBox::critical(this, "erro", e);
     }
